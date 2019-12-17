@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">FinalProject</string>
+    <string name="name">Juhani Juusola</string>
+    <string name="classInfo">ETA17SP</string>
+    <string name="button_get">Get data</string>
+    <string name="button_choosedate">Pick date</string>
+    <string name="edittext_date">Date</string>
+    <string name="edittext_location">Location</string>
+    <string name="nodata">No Data</string>
+</resources>
