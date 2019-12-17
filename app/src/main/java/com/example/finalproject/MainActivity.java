@@ -57,10 +57,6 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.I
     final String maksullinen = "maksullinen";
     // Layouts
     LinearLayout mainLayout;
-    // Views
-    Button buttonFind;
-    TextView editTextSearch;
-    ListView listView;
     // List
     Toast loading;
     // Database
@@ -85,11 +81,8 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.I
         ev = new EntityEvents();
         loc = new EntityLocation();
 
-
         modelLocation = new ViewModelProvider(this).get(ModelLocation.class);
         modelEvents = new ViewModelProvider(this).get(ModelEvents.class);
-        //modelLocation.showLocations(locationAdapter);
-
 
         fetchLocations(locationUrl);
     }
@@ -114,15 +107,6 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.I
 
     public void getDataFromResponse1 (JSONObject response) throws JSONException {
 
-        // Deserialisoitu tapa hakea JSON-taulukko
-        /* TARKISTA
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.create();
-        Type listantyyppi = new TypeToken<ArrayList<NimiJaPvm>>(){}.getType();
-        ArrayList<NimiJaPvm> lista;
-
-        lista = gson.fromJson(response.toString(), listantyyppi);
-*/
         String nextUrl = response.getJSONObject("meta").getString("next");
         String location = "";
             JSONArray result = response.getJSONArray("data");
@@ -153,10 +137,6 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.I
         ListViewFragment2 listViewFragment2 = (ListViewFragment2)
                 getSupportFragmentManager().findFragmentById(R.id.fragmentListView2);
         listViewFragment2.dataToFragment();
-        //Toast.makeText(getApplicationContext(), "Locations loaded", Toast.LENGTH_SHORT).show();
-
-
-
 
                         /*
                 if (o.has("divisions")) {
@@ -167,7 +147,6 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.I
                             loc.location = o.getJSONArray("divisions").getJSONObject(j).getJSONObject("name").getString("fi");
                         }
                     }
-
 
                 if (o.has("divisions")) {
                     if(o.getJSONArray("divisions").length() > 0){
@@ -203,7 +182,6 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.I
                     }
                 },
                 error ->getToast("Error fetching data: " + error.getMessage()).show());
-        //Toast.makeText(MainActivity.this, "Error fetching data: " + error.getMessage(), Toast.LENGTH_SHORT).show());
         return jsonObjectRequest;
     }
 
@@ -218,7 +196,6 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.I
             modelEvents.delete(ev);
             for (int i = 0; i < result.length(); i++) {
                 JSONObject o = result.getJSONObject(i);
-                //String e = o.getString("data"); //TARKISTA onko oikein
                 JSONObject oName = o.getJSONObject("name");
                 if(oName.has("fi"))
                     ev.name = oName.getString("fi");
@@ -244,15 +221,7 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.I
                         ev.price = "0";
                     }
                 }
-/*
-                JSONObject oLocation = o.getJSONObject("location");
-                String locationid = oLocation.getString("@id");
-                locationid = locationid.substring(locationid.indexOf("tprek"), locationid.length()-1);
-                count1.setValue(modelLocation.getLocation(locationid));
-                ev.location = count1.getValue().toString();
 
-
- */
                 JSONObject oDescription = o.getJSONObject("short_description");
                 if(oDescription.has("fi"))
                     ev.shortdescription = oDescription.getString("fi");
@@ -279,20 +248,11 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.I
         if (!testInternet(context)) {
             getToast("Internet connection not available!");
             hideKeyboard();
-            //Toast.makeText(getApplicationContext(), "Internet connection not available!", Toast.LENGTH_LONG).show();
             return;
         }
         requestQueue.add(request);
     }
-/*
-    private void clearSearch() { //TARKISTA
-        editTextSearch.setText("");
-        editTextSearch.clearFocus();
-        hideKeyboard();
-    }
 
-
- */
     public void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         try {
@@ -309,15 +269,7 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.I
         allNetworks = connMan.getAllNetworks();
         return (allNetworks != null);
     }
-    /*
-    private boolean checkInternetConnection() {
-        // Return true IF there is a active network with internet connection.
-        NetworkInfo network = connMan.getActiveNetworkInfo();
-        return network != null && network.isConnectedOrConnecting();
-    }
 
-
-     */
     // for interface
     @Override
     public void onGetDataClicked() {
