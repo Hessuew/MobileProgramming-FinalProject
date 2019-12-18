@@ -1,8 +1,10 @@
 package com.example.finalproject.Room;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.os.AsyncTask;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RepositoryEvents {
@@ -21,8 +23,8 @@ public class RepositoryEvents {
         new insertAsyncTask(daoEvents).execute(entityEvents);
     }
 
-    public void delete (EntityEvents entityEvents) {
-        new deleteAsyncTask(daoEvents).execute(entityEvents);
+    public void deleteAll() {
+        new deleteAsyncTask(daoEvents).execute();
     }
 
     private static class insertAsyncTask extends AsyncTask<EntityEvents, Void, Void> {
@@ -48,7 +50,7 @@ public class RepositoryEvents {
 
         @Override
         protected Void doInBackground(EntityEvents... entityEvents) {
-            mAsyncTaskDao.delete(entityEvents[0]);
+            mAsyncTaskDao.deleteAll();
             return null;
         }
     }

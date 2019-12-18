@@ -16,6 +16,6 @@ public interface DaoEvents {
     @Query("SELECT * FROM events;")
     List<EntityEvents> getAllEvents();
 
-    @Delete
-    void delete(EntityEvents listItem);
+    @Query("DELETE FROM events")
+    void deleteAll();
 }

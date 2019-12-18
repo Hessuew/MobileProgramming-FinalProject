@@ -23,8 +23,8 @@ public class ModelEvents extends AndroidViewModel {
         mRepository.insert(events);
     }
 
-    public void delete(EntityEvents events) {
-        mRepository.delete(events);
+    public void deleteAll() {
+        mRepository.deleteAll();
     }
 
     @SuppressLint("StaticFieldLeak")

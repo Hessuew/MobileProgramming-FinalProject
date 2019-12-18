@@ -108,21 +108,22 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.I
     public void getDataFromResponse1 (JSONObject response) throws JSONException {
 
         String nextUrl = response.getJSONObject("meta").getString("next");
-        String location = "";
             JSONArray result = response.getJSONArray("data");
             for (int i = 0; i < result.length(); i++) {
                 JSONObject o = result.getJSONObject(i);
-                    if(o.has("address_locality")){
-                        if(!o.getString("address_locality").equals("null")){
-                            if(o.getJSONObject("address_locality").has("fi"))
-                            location = o.getJSONObject("address_locality").getString("fi");
-                        }
+                if (o.has("divisions")) {
+                    if (!o.getJSONArray("divisions").equals("null")) {
+                            if (o.getJSONArray("divisions").length() == 1)
+                                loc.location = o.getJSONArray("divisions").getJSONObject(0).getJSONObject("name").getString("fi");
+                            else {
+                                loc.location = o.getJSONArray("divisions").getJSONObject(1).getJSONObject("name").getString("fi");
+                            }
                     }
-                        if (!arr.contains(location) && location.length() > 1) {
-                            arr.add(location);
+                }
+                        if (!arr.contains(loc.location)) {
+                            arr.add(loc.location);
 
                             loc.id_location = o.getString("id");
-                            loc.location = location;
 
                             JSONObject oStreetAddress = o.getJSONObject("street_address");
                             loc.address = oStreetAddress.getString("fi");
@@ -138,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.I
                 getSupportFragmentManager().findFragmentById(R.id.fragmentListView2);
         listViewFragment2.dataToFragment();
 
-                        /*
+        /*
                 if (o.has("divisions")) {
                     for (int j = 0; j < 4; j++) {
                         JSONObject oDivisions = o.getJSONArray("divisions").getJSONObject(j);
@@ -151,6 +152,13 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.I
                 if (o.has("divisions")) {
                     if(o.getJSONArray("divisions").length() > 0){
                         loc.location = o.getJSONArray("divisions").getJSONObject(0).getJSONObject("name").getString("fi");
+                    }
+
+                                        if(o.has("address_locality")){
+                        if(!o.getString("address_locality").equals("null")){
+                            if(o.getJSONObject("address_locality").has("fi"))
+                            location = o.getJSONObject("address_locality").getString("fi");
+                        }
                     }
                  */
     }
@@ -193,8 +201,8 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.I
         JSONArray result = response.getJSONArray("data");
 
         if (result != null && result.length() > 0) {
-            modelEvents.delete(ev);
             for (int i = 0; i < result.length(); i++) {
+
                 JSONObject o = result.getJSONObject(i);
                 JSONObject oName = o.getJSONObject("name");
                 if(oName.has("fi"))
@@ -204,8 +212,6 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.I
 
                 ev.date = o.getString("start_time");
 
-                JSONArray oOffers = o.getJSONArray("offers");
-                int asd = o.getJSONArray("offers").length();
                 if (o.getJSONArray("offers").length() > 0 ){
                     String is_free = o.getJSONArray("offers").getJSONObject(0).getString("is_free");
                     if (is_free.equals("false")) {
@@ -225,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.I
                 JSONObject oDescription = o.getJSONObject("short_description");
                 if(oDescription.has("fi"))
                     ev.shortdescription = oDescription.getString("fi");
-                else
+                else if(oDescription.has("sv"))
                     ev.shortdescription = oDescription.getString("sv");
 
                 modelEvents.insert(ev);
@@ -286,6 +292,7 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.I
         if (choosedLocation == "")
             getToast("Choose location");
 
+       // modelEvents.deleteAll();
         addRequestToQueue(fetchEvents(choosedDate, choosedLocation, eventsUrl));
     }
 
